@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070708">
+<title>DramaTV</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #070708;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+    padding: 35px 24px;
+    background: #111113;
+    border: 1px solid #292326;
+    border-radius: 26px;
+}
+
+.logo {
+    font-size: 38px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.logo span {
+    color: #e50914;
+}
+
+.icon {
+    font-size: 48px;
+    margin: 20px 0;
+}
+
+h2 {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+p {
+    color: #aaa;
+    line-height: 1.8;
+}
+
+.info {
+    margin: 22px 0;
+    padding: 14px;
+    background: #1b1719;
+    border-radius: 14px;
+    color: #ff454f;
+    direction: ltr;
+    overflow-wrap: anywhere;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: 0;
+    border-radius: 14px;
+    background: #e50914;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    opacity: .8;
+}
+
+.footer {
+    margin-top: 25px;
+    font-size: 12px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">Drama<span>TV</span></div>
+
+    <div class="icon">🎬</div>
+
+    <h2 id="title">أهلاً بك في DramaTV</h2>
+
+    <p id="description">
+        افتح هذا المحتوى من خلال تطبيق DramaTV.
+    </p>
+
+    <div class="info" id="contentId"></div>
+
+    <button id="openButton">
+        فتح في DramaTV
+    </button>
+
+    <div class="footer">
+        DramaTV · عالمك للترفيه
+    </div>
+
+</div>
+
+<script>
+const parts = window.location.pathname
+    .split("/")
+    .filter(Boolean);
+
+const type = parts[0] || "";
+const id = parts[1] || "";
+
+const valid =
+    (type === "movie" || type === "series") &&
+    /^[a-zA-Z0-9_-]+$/.test(id);
+
+const title = document.getElementById("title");
+const description = document.getElementById("description");
+const contentId = document.getElementById("contentId");
+const openButton = document.getElementById("openButton");
+
+if (valid) {
+
+    title.textContent =
+        type === "movie" ? "مشاهدة الفيلم" : "مشاهدة المسلسل";
+
+    description.textContent =
+        "هذا المحتوى متوفر عبر تطبيق DramaTV. اضغط أدناه لفتحه.";
+
+    contentId.textContent =
+        (type === "movie" ? "Movie ID: " : "Series ID: ") + id;
+
+    const fallbackUrl = window.location.href;
+
+    const intentUrl =
+        "intent://shsn15232-lab.github.io/" +
+        type + "/" + encodeURIComponent(id) +
+        "#Intent;scheme=https;" +
+        "package=com.dramatv.app;" +
+        "S.browser_fallback_url=" +
+        encodeURIComponent(fallbackUrl) +
+        ";end";
+
+    openButton.addEventListener("click", function () {
+        window.location.href = intentUrl;
+    });
+
+} else {
+
+    title.textContent = "المحتوى غير متوفر";
+    description.textContent =
+        "الرابط غير صحيح أو أن المحتوى غير موجود.";
+    contentId.textContent = "DramaTV";
+    openButton.style.display = "none";
+}
+</script>
+
+</body>
+</html>
